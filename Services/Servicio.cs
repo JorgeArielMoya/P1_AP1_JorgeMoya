@@ -1,10 +1,18 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
 using P1_AP1_JorgeMoya.DAL;
+using P1_AP1_JorgeMoya.Models;
 
-namespace P1_AP1_JorgeMoya.Services
+namespace P1_AP1_JorgeMoya.Services;
+
+public class Servicio(IDbContextFactory<Contexto>DbFactory)
 {
-    public class Servicio(IDbContextFactory<Contexto>DbFactory)
+    public async Task<List<Registro>> Listar (Expression<Func<Registro,bool>> criterio)
     {
-
+        await using var contexto = await DbFactory.CreateDbContextAsync();
+        return await contexto.Registros
+            .Where(criterio)
+            .AsNoTracking()
+            .ToListAsync();
     }
 }
