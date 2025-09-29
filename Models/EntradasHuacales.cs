@@ -2,7 +2,7 @@
 
 namespace P1_AP1_JorgeMoya.Models;
 
-public class Registro
+public class EntradasHuacales
 {
     [Key]
     public int Id { get; set; }     

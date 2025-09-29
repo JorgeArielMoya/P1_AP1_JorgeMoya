@@ -5,7 +5,7 @@ namespace P1_AP1_JorgeMoya.DAL;
 
 public class Contexto : DbContext
 {
-    public DbSet<Registro> Registros { get; set; }
+    public DbSet<EntradasHuacales> Registros { get; set; }
 
     public Contexto(DbContextOptions<Contexto> options) : base(options) { }
 }
