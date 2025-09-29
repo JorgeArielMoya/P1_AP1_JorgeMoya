@@ -5,7 +5,7 @@ using P1_AP1_JorgeMoya.Models;
 
 namespace P1_AP1_JorgeMoya.Services;
 
-public class Servicio(IDbContextFactory<Contexto>DbFactory)
+public class EntradasService(IDbContextFactory<Contexto>DbFactory)
 {
     public async Task<bool> Guardar (EntradasHuacales entrada)
     {
