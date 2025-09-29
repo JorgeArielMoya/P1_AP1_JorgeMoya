@@ -1,13 +1,135 @@
-﻿@page "/Entradas/Edit{idEntrada:int}"
+﻿@page "/Entradas/Edit/{idEntrada:int}"
 @inject EntradasService entradasService
 @inject NavigationManager navigationManager
 @rendermode InteractiveServer
 
+<PageTitle> Edit </PageTitle>
+
+@if(Entrada != null)
+{
+	<div class="container mt-3">
+		<div class="card shadow-lg">
+			<div class="card-header">
+				<h5 class="card-title text-center"> <strong> Editar Entrada </strong> </h5>
+			</div>
+
+			<div class="card-body">
+				<EditForm Model="Entrada" OnValidSubmit="GuardarEntrada">
+					<DataAnnotationsValidator />
+					<div class="row">
+						<div class="col-12 col-md-3 mb-3">
+							<label class="col-form-label"> <strong> Entrada Id: </strong></label>
+							<InputNumber class="form-control" @bind-Value="Entrada.IdEntrada" disabled />
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-12 col-md-3 mb-3">
+							<label class="col-form-label"> <strong> Nombre cliente: </strong></label>
+							<InputText class="form-control" @bind-Value="Entrada.NombreCliente" />
+							<ValidationMessage For="() => Entrada.NombreCliente"> </ValidationMessage>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-12 col-md-3 mb-3">
+							<label class="col-form-label"> <strong> Cantidad: </strong></label>
+							<InputNumber class="form-control" @bind-Value="Entrada.Cantidad" />
+							<ValidationMessage For="() => Entrada.Cantidad"> </ValidationMessage>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-12 col-md-3 mb-3">
+							<label class="col-form-label"> <strong> Precio: </strong></label>
+							<InputNumber class="form-control" @bind-Value="Entrada.Precio" />
+							<ValidationMessage For="() => Entrada.Precio"> </ValidationMessage>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-12 col-md-3 mb-3">
+							<label class="col-form-label"> <strong> Fecha: </strong></label>
+							<InputDate class="form-control" @bind-Value="Entrada.Fecha" />
+						</div>
+					</div>
+
+					<div class="card-footer d-flex justify-content-center gap-2 bg-white">
+						<button type="submit" class="btn btn-primary bi bi-floppy"> Guardar </button>
+						<button type="button" class="btn btn-danger bi bi-trash" @onclick = "() => mostrarModal = true"> Eliminar </button>
+						<a href="/Entradas/Index" class="btn btn-secondary bi bi-arrow-left"> Regresar </a>
+					</div>
+				</EditForm>
+			</div>
+		</div>
+	</div>
+}
+
+else 
+{
+	<div class="text-center"> Cargando datos de la entrada...</div>
+}
+
+@if(mostrarModal)
+{
+	<div class="modal d-block" role="dialog" tabindex="-1" style="background: rgba(0,0,0,0.5)">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="card-header mx-auto"> <strong> Confirmar Eliminacion </strong></h5>
+				</div>
+
+				<div class="modal-body">
+					<label class="col-12"> <strong> Datos Entrada </strong></label>
+					<label class="col-12"> <strong> EntradaId: </strong> @Entrada.IdEntrada</label>
+					<label class="col-12"> <strong> Nombre cliente: </strong> @Entrada.NombreCliente</label>
+					<label class="col-12"> <strong> Cantidad: </strong> @Entrada.Cantidad</label>
+					<label class="col-12"> <strong> Precio: </strong> @Entrada.Precio.ToString("F2")</label>
+					<label class="col-12"> <strong> Fecha: </strong> @Entrada.Fecha.ToShortDateString()</label>
+					<label class="text-danger"> Esta seguro que desea eliminar esta entrada? </label>
+				</div>
+
+				<div class="modal-footer gap-2 bg-white d-flex justify-content-center">
+					<button type="button" class="btn btn-danger bi bi-trash" @onclick ="EliminarEntrada"> Si, dese eliminar </button>
+					<button type="button" class="btn btn-secondary bi bi-arrow-left" @onclick = "() => mostrarModal = false"> Regresar </button>
+				</div>
+			</div>
+		</div>
+	</div>
+}
 
 @code {
 	[Parameter]
 	public int IdEntrada{ get; set; }
 
-	public EntradasHuacales entrada { get; set; }
+	public EntradasHuacales? Entrada { get; set; }
 
+	public bool mostrarModal { get; set; } = false;
+
+	protected override async Task OnInitializedAsync()
+	{
+		Entrada = await entradasService.Buscar(IdEntrada);
+	}
+
+	public async Task GuardarEntrada()
+	{
+		if (Entrada != null)
+		{
+			if (await entradasService.Guardar(Entrada))
+			{
+				navigationManager.NavigateTo("/Entradas/Index");
+			}
+		}
+	}
+
+	public async Task EliminarEntrada()
+	{
+		if (Entrada != null)
+		{
+			if (await entradasService.Eliminar(IdEntrada))
+			{
+				navigationManager.NavigateTo("/Entradas/Index");
+			}
+		}
+	}
 }
