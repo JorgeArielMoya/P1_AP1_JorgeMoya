@@ -14,6 +14,7 @@ public class EntradasHuacales
     [Range(0, int.MaxValue, ErrorMessage = "Cantidad no valida")]
     public int Cantidad {  get; set; }
 
+    [Required(ErrorMessage = "Campo Requerido")]
     [Range(0.01, double.MaxValue, ErrorMessage = "Precio no valido")]
     public double Precio { get; set; }
 
