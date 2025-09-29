@@ -3,7 +3,138 @@
 @inject NavigationManager navigationManager
 @rendermode InteractiveServer
 
+<PageTitle> Index </PageTitle>
+<div class="container mt-2">
+	<div class="card shadow-lg">
+		<div class="card-header">
+			<h5 class="card-title text-center"><strong> Consulta Entradas </strong></h5>
 
+			<div class="d-flex justify-content-end">
+				<a href="/Entradas/Create" class="btn btn-primary bi bi-plus-square"> Crear </a>
+			</div>
+		</div>
+
+		<div class="card-body">
+			<div class="row align-items-center">
+				<div class="col-12 col-md-3 mb-3">
+					<label class="col-form-label"> <strong> Desde: </strong></label>
+					<InputDate class="form-control" @bind-Value = "desde" />
+				</div>
+
+				<div class="col-12 col-md-3 mb-3">
+					<label class="col-form-label"> <strong> Hasta: </strong></label>
+					<InputDate class="form-control" @bind-Value="hasta" />
+				</div>
+			</div>
+
+			<div class="row align-items-center">
+				<div class="col-12 col-md-3 mb-3">
+					<label class="col-form-label"> <strong> Filtrar por: </strong></label>
+					<InputSelect class="form-select" @bind-Value="filtro"> 
+						<option value="IdEntrada"> IdEntrada </option>
+						<option value="NombreCliente"> Nombre </option>
+						<option value="Cantidad"> Cantidad </option>
+						<option value="Precio"> Precio </option>
+					</InputSelect>
+				</div>
+
+				<div class="col-12 col-md-3 mb-3">
+					<label class="col-form-label"> <strong> Busqueda: </strong></label>
+					<div class="input-group">
+						<input class="form-control" @bind = "valorFiltro" placeholder="Buscar" />
+						<button type="button" class="btn btn-outline-primary bi bi-search" @onclick ="Buscar"> Buscar </button>
+					</div>
+				</div>
+			</div>
+
+			<div class="table-responsive">
+				<table class="table table-hover text-center">
+					<thead class="table table-striped">
+						<tr> 
+							<th> IdEntrada </th>
+							<th> Nombre Cliente </th>
+							<th> Cantidad </th>
+							<th> Precio </th>
+							<th> Fecha </th>
+							<th> Opciones </th>
+						</tr>
+					</thead>
+
+					@if(ListaEntradas.Count == 0)
+					{
+						<tr>
+							<td colspan="5"> No se han encontrado ntradas</td>
+						</tr>
+					}
+
+					@foreach(var entrada in ListaEntradas)
+					{
+						<tr>
+							<td> @entrada.IdEntrada</td>
+							<td> @entrada.NombreCliente</td>
+							<td> @entrada.Cantidad</td>
+							<td> @entrada.Precio.ToString("F2")</td>
+							<td> @entrada.Fecha.ToShortDateString()</td>
+							<td> <a href="/Entradas/Edit/@entrada.IdEntrada" class="btn btn-outline-info bi bi-pencil"> </a></td>
+						</tr>
+					}
+				</table>
+			</div>
+		</div>
+		<div class="card-footer space-between">
+			<label> <strong> Conteo Entradas: </strong> @ListaEntradas.Count</label>
+			<label> <strong> Total: </strong> @ListaEntradas.Sum(a=> a.Precio).ToString("F2")</label>
+		</div>
+	</div>
+</div>
 @code {
+	public DateTime? desde { get; set; }
 
+	public DateTime? hasta { get; set; }
+
+	public string filtro { get; set; } = null!;
+
+	public string valorFiltro { get; set; } = string.Empty;
+
+	public List<EntradasHuacales> ListaEntradas = new List<EntradasHuacales>();
+
+	protected override async Task OnInitializedAsync ()
+	{
+		await Buscar();
+	}
+
+	public async Task Buscar ()
+	{
+		var lista = await entradasService.Listar(e=> true);
+
+		if (desde.HasValue && hasta.HasValue)
+		{
+			lista = lista.Where(a => a.Fecha >= desde && a.Fecha <= hasta).ToList();
+		}
+
+		if (!string.IsNullOrEmpty(valorFiltro))
+		{
+			if (filtro == nameof(EntradasHuacales.IdEntrada) && int.TryParse(valorFiltro, out int id))
+			{
+				lista = lista.Where(a => a.IdEntrada == id).ToList();
+			}
+
+			else if (filtro == nameof(EntradasHuacales.NombreCliente))
+			{
+				lista = lista.Where(a => a.NombreCliente != null && a.NombreCliente.Contains(valorFiltro, StringComparison.OrdinalIgnoreCase)).ToList();
+			}
+
+			else if  (filtro == nameof(EntradasHuacales.Cantidad) && int.TryParse(valorFiltro, out int cantidad))
+			{
+				lista = lista.Where(a => a.Cantidad == cantidad).ToList();
+			}
+
+			else if (filtro == nameof(EntradasHuacales.Precio) && double.TryParse(valorFiltro, out double precio))
+			{
+				lista = lista.Where(a => a.Precio == precio).ToList();
+			}
+		}
+
+		ListaEntradas = lista;
+	}
 }
