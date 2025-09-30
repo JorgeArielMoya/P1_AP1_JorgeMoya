@@ -11,7 +11,7 @@ public class EntradasHuacales
     public string NombreCliente { get; set; } = null!;
 
     [Required(ErrorMessage = "Campo Requerido")]
-    [Range(0, int.MaxValue, ErrorMessage = "Cantidad no valida")]
+    [Range(1, int.MaxValue, ErrorMessage = "Cantidad no valida")]
     public int Cantidad {  get; set; }
 
     [Required(ErrorMessage = "Campo Requerido")]
