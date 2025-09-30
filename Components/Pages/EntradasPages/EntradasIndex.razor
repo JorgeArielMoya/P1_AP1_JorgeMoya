@@ -84,7 +84,7 @@
 		</div>
 		<div class="card-footer space-between">
 			<label> <strong> Conteo entradas: </strong> @ListaEntradas.Count</label>
-			<label> <strong> Total cantidad: </strong> @ListaEntradas.Sum(a=> a.Cantidad)</label>
+			<label> <strong> Total cantidad: </strong> @ListaEntradas.Sum(a=> a.Cantidad * a.Precio)</label>
 		</div>
 	</div>
 </div>
