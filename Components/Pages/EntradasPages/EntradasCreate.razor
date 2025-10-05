@@ -39,7 +39,7 @@
 				<div class="row">
 					<div class="col-12 col-md-3 mb-3">
 						<label class="col-form-label"> <strong> Cantidad: </strong></label>
-						<InputNumber class="form-control" @bind-Value="Entrada.Cantidad"/>
+						<InputNumber class="form-control" @bind-Value="Entrada.Cantidad" @bind-Value:after = "CalcularImporte"/>
 						<ValidationMessage For="() => Entrada.Cantidad"> </ValidationMessage>
 					</div>
 				</div>
@@ -47,10 +47,17 @@
 				<div class="row">
 					<div class="col-12 col-md-3 mb-3">
 						<label class="col-form-label"> <strong> Precio: </strong></label>
-						<InputNumber class="form-control" @bind-Value="Entrada.Precio"/>
+						<InputNumber class="form-control" @bind-Value="Entrada.Precio" @bind-Value:after="CalcularImporte"/>
 						<ValidationMessage For="() => Entrada.Precio"> </ValidationMessage>
 					</div>
 				</div>
+
+				<div class="row">
+					<div class="col-12 col-md-3 mb-3">
+						<label class="col-form-label"> <strong> Importe: </strong> </label>
+						<InputNumber class="form-control" @bind-Value = "Importe" readonly/>
+					</div>
+				</div> 
 
 				<div class="card-footer text-center gap-2 bg-white">
 					<button type="submit" class="btn btn-primary bi bi-floppy"> Guardar </button>
@@ -62,7 +69,14 @@
 </div>
 
 @code {
-	public EntradasHuacales Entrada = new();
+	public EntradasHuacales Entrada = new EntradasHuacales();
+
+	public double Importe { get; set; }
+
+	private void CalcularImporte ()
+	{
+		Importe = Entrada.Cantidad * Entrada.Precio;
+	}
 
 	public async Task GuardarEntrada ()
 	{
