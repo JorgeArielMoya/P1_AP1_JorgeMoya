@@ -57,6 +57,7 @@
 							<th> Nombre Cliente </th>
 							<th> Cantidad </th>
 							<th> Precio </th>
+							<th> Importe </th>
 							<th> Fecha </th>
 							<th> Opciones </th>
 						</tr>
@@ -76,6 +77,7 @@
 							<td> @entrada.NombreCliente </td>
 							<td> @entrada.Cantidad </td>
 							<td> @entrada.Precio.ToString("F2") </td>
+							<td> @((entrada.Precio * entrada.Cantidad).ToString("F2")) </td>
 							<td> @entrada.Fecha.ToShortDateString()</td>
 							<td> <a href="/Entradas/Edit/@entrada.IdEntrada" class="btn btn-outline-info bi bi-pencil-square"> </a></td>
 						</tr>
