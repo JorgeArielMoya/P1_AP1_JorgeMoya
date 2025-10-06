@@ -32,6 +32,7 @@
 				<div class="col-12 col-md-3 mb-3">
 					<label class="col-form-label"> <strong> Filtrar por: </strong></label>
 					<InputSelect class="form-select" @bind-Value="filtro"> 
+						<option value="" selected disabled> Elija una opcion </option>
 						<option value="IdEntrada"> Entrada Id </option>
 						<option value="NombreCliente"> Nombre </option>
 						<option value="Cantidad"> Cantidad </option>
@@ -56,6 +57,7 @@
 							<th> Nombre Cliente </th>
 							<th> Cantidad </th>
 							<th> Precio </th>
+							<th> Importe </th>
 							<th> Fecha </th>
 							<th> Opciones </th>
 						</tr>
@@ -64,7 +66,7 @@
 					@if(ListaEntradas.Count == 0)
 					{
 						<tr>
-							<td colspan="5"> No se han encontrado ntradas</td>
+							<td colspan="5"> No se han encontrado entradas </td>
 						</tr>
 					}
 
@@ -75,16 +77,17 @@
 							<td> @entrada.NombreCliente </td>
 							<td> @entrada.Cantidad </td>
 							<td> @entrada.Precio.ToString("F2") </td>
+							<td> @((entrada.Precio * entrada.Cantidad).ToString("F2")) </td>
 							<td> @entrada.Fecha.ToShortDateString()</td>
-							<td> <a href="/Entradas/Edit/@entrada.IdEntrada" class="btn btn-outline-info bi bi-pencil"> </a></td>
+							<td> <a href="/Entradas/Edit/@entrada.IdEntrada" class="btn btn-outline-info bi bi-pencil-square"> </a></td>
 						</tr>
 					}
 				</table>
 			</div>
 		</div>
 		<div class="card-footer space-between bg-white">
-			<label> <strong> Conteo entradas: </strong> @ListaEntradas.Count</label>
-			<label> <strong> Total obtenido: </strong> @ListaEntradas.Sum(a=> a.Cantidad * a.Precio).ToString("F2")</label>
+			<label> <strong> Total cantidad: </strong> @ListaEntradas.Sum(a => a.Cantidad) </label>
+			<label> <strong> Total importe: </strong> @ListaEntradas.Sum(a=> a.Cantidad * a.Precio).ToString("F2") </label>
 		</div>
 	</div>
 </div>
