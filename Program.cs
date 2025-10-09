@@ -17,6 +17,9 @@ builder.Services.AddDbContextFactory<Contexto>(o => o.UseSqlite(ConStr));
 //Inyeccion del service
 builder.Services.AddScoped<EntradasService>();
 
+// Inyeccion del servicio de Bootstrap
+builder.Services.AddBlazorBootstrap();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
