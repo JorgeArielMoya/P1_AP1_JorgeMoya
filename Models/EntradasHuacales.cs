@@ -21,6 +21,5 @@ public class EntradasHuacales
 
     public DateTime Fecha { get; set; } = DateTime.Now;
 
-    [InverseProperty("EntradasHuacales")]
     public virtual ICollection<EntradasHuacalesDetalle> EntradasHuacalesDetalles { get; set; } = new List<EntradasHuacalesDetalle>();
 }

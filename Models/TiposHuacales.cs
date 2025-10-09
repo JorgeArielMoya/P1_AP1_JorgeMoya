@@ -15,6 +15,5 @@ public class TiposHuacales
     [Range(0, int.MaxValue, ErrorMessage = "Existencia no valida")]
     public int Existencia { get; set; }
 
-    [ForeignKey("IdEntrada")]
-    public int IdEntrada { get; set; }
+    public virtual ICollection<EntradasHuacalesDetalle> EntradasHuacalesDetalles { get; set; } = new List<EntradasHuacalesDetalle>();
 }
