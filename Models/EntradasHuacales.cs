@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace P1_AP1_JorgeMoya.Models;
 
@@ -19,4 +20,7 @@ public class EntradasHuacales
     public double Precio { get; set; }
 
     public DateTime Fecha { get; set; } = DateTime.Now;
+
+    [InverseProperty("EntradasHuacales")]
+    public virtual ICollection<EntradasHuacalesDetalle> EntradasHuacalesDetalles { get; set; } = new List<EntradasHuacalesDetalle>();
 }
