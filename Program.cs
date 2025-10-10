@@ -1,3 +1,4 @@
+using BlazorBootstrap;
 using Microsoft.EntityFrameworkCore;
 using P1_AP1_JorgeMoya.Components;
 using P1_AP1_JorgeMoya.DAL;
@@ -19,6 +20,7 @@ builder.Services.AddScoped<EntradasService>();
 
 // Inyeccion del servicio de Bootstrap
 builder.Services.AddBlazorBootstrap();
+builder.Services.AddScoped<ToastService>(); 
 
 var app = builder.Build();
 
