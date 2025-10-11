@@ -17,19 +17,19 @@
 
 		<div class="card-body">
 			<div class="row align-items-center">
-				<div class="col-12 col-md-3 mb-3">
+				<div class="col-12 col-md-4 mb-3">
 					<label class="col-form-label"> <strong> Desde: </strong></label>
 					<InputDate class="form-control" @bind-Value = "desde" />
 				</div>
 
-				<div class="col-12 col-md-3 mb-3">
+				<div class="col-12 col-md-4 mb-3">
 					<label class="col-form-label"> <strong> Hasta: </strong></label>
 					<InputDate class="form-control" @bind-Value="hasta" />
 				</div>
 			</div>
 
 			<div class="row align-items-center">
-				<div class="col-12 col-md-3 mb-3">
+				<div class="col-12 col-md-4 mb-3">
 					<label class="col-form-label"> <strong> Filtrar por: </strong></label>
 					<InputSelect class="form-select" @bind-Value="filtro"> 
 						<option value="" selected disabled> Elija una opcion </option>
@@ -40,7 +40,7 @@
 					</InputSelect>
 				</div>
 
-				<div class="col-12 col-md-3 mb-3">
+				<div class="col-12 col-md-4 mb-3">
 					<label class="col-form-label"> <strong> Busqueda: </strong></label>
 					<div class="input-group">
 						<input class="form-control" @bind = "valorFiltro" placeholder="Buscar" />
