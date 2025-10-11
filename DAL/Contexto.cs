@@ -35,6 +35,27 @@ public class Contexto : DbContext
                     TipoId = 3,
                     Descripcion = "Negro",
                     Existencia = 0
+                },
+
+                new ()
+                {
+                    TipoId = 4,
+                    Descripcion = "Azul",
+                    Existencia = 0
+                },
+
+                new ()
+                {
+                    TipoId = 5,
+                    Descripcion = "Amarillo",
+                    Existencia = 0
+                },
+
+                new ()
+                {
+                    TipoId = 6,
+                    Descripcion = "Naranja",
+                    Existencia = 0
                 }
             }
         );
