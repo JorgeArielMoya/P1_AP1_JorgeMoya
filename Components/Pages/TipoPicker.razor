@@ -57,6 +57,7 @@
 		if (Cantidad <= 0)
 		{
 			ErrorMensaje = "Cantidad no valida";
+			return;
 		}
 
 		var tipoSeleccionado = TiposHuacales.Single(t => t.TipoId == TipoId);
