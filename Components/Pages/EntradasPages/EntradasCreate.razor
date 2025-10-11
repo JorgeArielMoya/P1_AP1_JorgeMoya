@@ -48,19 +48,59 @@
 
 @code {
 	public EntradasHuacales Entrada = new EntradasHuacales();
+	public EntradasHuacalesDetalle DetalleSeleccionado { get; set; } = new();
+	public List<TiposHuacales> ListaTiposHuacales { get; set; } = new();
+	public string errorMensaje { get; set; } = string.Empty;
 
 	public double Importe { get; set; }
 
-	private void CalcularImporte ()
+	protected override async Task OnInitializedAsync ()
 	{
-		Importe = Entrada.Cantidad * Entrada.Precio;
+		ListaTiposHuacales = await entradasService.ListarTiposHuacales();
+	}
+
+	private async Task HandleTipoSeleccionado((TiposHuacales tipo, int cantidad, double precio) selection)
+	{
+		var detalle = new EntradasHuacalesDetalle
+		{
+			TipoId = selection.tipo.TipoId,
+			Cantidad = selection.cantidad,
+			Precio = selection.precio,
+		};
+
+		Entrada.EntradasHuacalesDetalles.Add(detalle);
+
+		DetalleSeleccionado = new EntradasHuacalesDetalle();
+		await Task.CompletedTask;
 	}
 
 	public async Task GuardarEntrada ()
 	{
+		if (Entrada.NombreCliente == null)
+		{
+			errorMensaje = "El nombre no puede ser vacio";
+		}
+
 		if (await entradasService.Guardar(Entrada))
 		{
+			toastService.ShowSuccess("Entrada guardada correctamente");
 			navigationManager.NavigateTo("/Entradas/Index");
 		}
+
+		else 
+		{
+			errorMensaje = "Error al guardar!";
+		}
+	}
+
+	private void RemoverDetalle(EntradasHuacalesDetalle detalle)
+	{
+		Entrada.EntradasHuacalesDetalles.Remove(detalle);
+		DetalleSeleccionado = detalle;
+	}
+
+	private void CalcularImporte()
+	{
+		Importe = Entrada.Cantidad * Entrada.Precio;
 	}
 }
