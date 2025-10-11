@@ -1,0 +1,70 @@
+﻿﻿<div class="col-auto input-group align-items-center">
+	<label class="col-form-label"> <strong> Seleccionar tipo: </strong> </label>
+
+	<InputSelect class="form-select" @bind-Value="TipoId">
+		<option value="" selected disabled> Elija una opcion </option>
+
+		@foreach (var tipo in TiposHuacales)
+		{
+			<option value="@tipo.TipoId">@tipo.TipoId - @tipo.Descripcion (Existencia: @tipo.Existencia)</option>
+		}
+	</InputSelect>
+
+	<label class="col-form-label"> <strong> Cantidad </strong> </label>
+	<InputNumber class="form-control" @bind-Value="Cantidad"/>
+
+	<label class="col-form-label"> <strong> Precio </strong> </label>
+	<InputNumber class="form-control" @bind-Value="Precio"/>
+
+	<button type="button" class="btn btn-outline-success bi bi-plus" @onclick="TriggerSelection"> Agregar </button>
+</div>
+
+@if (ErrorMensaje != null)
+{
+	<div class="alert alert-danger" role="alert">
+		@ErrorMensaje
+	</div>
+}
+
+@code {
+	[Parameter]
+	public List<TiposHuacales> TiposHuacales { get; set; } = new List<TiposHuacales>();
+
+	[Parameter]
+	public int TipoId { get; set; }
+
+	[Parameter]
+	public int Cantidad { get; set; }
+
+	[Parameter]
+	public decimal Precio { get; set; }
+
+	[Parameter]
+	public EventCallback<(TiposHuacales Tipo, int Cantidad, decimal Precio)> OnTipoSeleccionado { get; set; }
+
+	private string? ErrorMensaje { get; set; } = null;
+
+	private async Task TriggerSelection()
+	{
+		ErrorMensaje = null;
+
+		if (TipoId == 0)
+		{
+			ErrorMensaje = "Por favor, seleccione un tipo de huacal";
+			return;
+		}
+
+		if (Cantidad <= 0)
+		{
+			ErrorMensaje = "Cantidad no valida";
+		}
+
+		var tipoSeleccionado = TiposHuacales.Single(t => t.TipoId == TipoId);
+
+		await OnTipoSeleccionado.InvokeAsync((tipoSeleccionado, Cantidad, Precio));
+
+		TipoId = 0;
+		Cantidad = 0;
+		Precio = 0;
+	}
+}
