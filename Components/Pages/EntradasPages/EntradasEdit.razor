@@ -117,8 +117,9 @@ else
 					<label class="col-12"> <strong> Datos Entrada </strong></label>
 					<label class="col-12"> <strong> EntradaId: </strong> @Entrada.IdEntrada</label>
 					<label class="col-12"> <strong> Nombre cliente: </strong> @Entrada.NombreCliente</label>
-					<label class="col-12"> <strong> Cantidad: </strong> @Entrada.Cantidad</label>
-					<label class="col-12"> <strong> Precio: </strong> @Entrada.Precio.ToString("F2")</label>
+					<label class="col-12"> <strong> Total cantidad: </strong>  @Entrada.EntradasHuacalesDetalles.Sum(d => d.Cantidad)</label>
+					<label class="col-12"> <strong> Total precio: </strong> @Entrada.EntradasHuacalesDetalles.Sum(d => d.Precio).ToString("F2")</label>
+					<label class="col-12"> <strong> Total importe: </strong> @Entrada.EntradasHuacalesDetalles.Sum(d => d.Precio * d.Cantidad)</label>
 					<label class="col-12"> <strong> Fecha: </strong> @Entrada.Fecha.ToShortDateString()</label>
 					<label class="text-danger"> Esta seguro que desea eliminar esta entrada? </label>
 				</div>
@@ -155,6 +156,11 @@ else
 	{
 		if (Entrada != null)
 		{
+			if (string.IsNullOrEmpty(Entrada.NombreCliente))
+			{
+				return;
+			}
+
 			if (await entradasService.Guardar(Entrada))
 			{
 				toastService.ShowSuccess("Entrada modificada correctamente");

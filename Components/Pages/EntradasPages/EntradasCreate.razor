@@ -42,10 +42,10 @@
                     <h5>Detalles de Huacales</h5>
 
                     <TipoPicker TiposHuacales="ListaTiposHuacales"
-                                TipoId="DetalleSeleccionado.TipoId"
-                                Cantidad="DetalleSeleccionado.Cantidad"
-                                Precio="DetalleSeleccionado.Precio"
-                                OnTipoSeleccionado="HandleTipoSeleccionado" />
+                    TipoId="DetalleSeleccionado.TipoId"
+                    Cantidad="DetalleSeleccionado.Cantidad"
+                    Precio="DetalleSeleccionado.Precio"
+                    OnTipoSeleccionado="HandleTipoSeleccionado" />
                     <hr />
 
                     <table class="table table-light table-bordered table-hover">
@@ -96,39 +96,39 @@
 </div>
 
 @code {
-	public EntradasHuacales Entrada = new EntradasHuacales();
-	public EntradasHuacalesDetalle DetalleSeleccionado { get; set; } = new();
-	public List<TiposHuacales> ListaTiposHuacales { get; set; } = new();
-	public string errorMensaje { get; set; } = string.Empty;
+    public EntradasHuacales Entrada = new EntradasHuacales();
+    public EntradasHuacalesDetalle DetalleSeleccionado { get; set; } = new();
+    public List<TiposHuacales> ListaTiposHuacales { get; set; } = new();
+    public string errorMensaje { get; set; } = string.Empty;
 
     public double ImporteTotal => Entrada?.EntradasHuacalesDetalles?.Sum(d => d.Cantidad * d.Precio) ?? 0;
 
-	protected override async Task OnInitializedAsync ()
-	{
-		ListaTiposHuacales = await entradasService.ListarTiposHuacales();
-	}
+    protected override async Task OnInitializedAsync ()
+    {
+        ListaTiposHuacales = await entradasService.ListarTiposHuacales();
+    }
 
-	private async Task HandleTipoSeleccionado((TiposHuacales tipo, int cantidad, double precio) selection)
-	{
-		var detalle = new EntradasHuacalesDetalle
+    private async Task HandleTipoSeleccionado((TiposHuacales tipo, int cantidad, double precio) selection)
+    {
+        var detalle = new EntradasHuacalesDetalle
 		{
 			TipoId = selection.tipo.TipoId,
 			Cantidad = selection.cantidad,
 			Precio = selection.precio,
 		};
 
-		Entrada.EntradasHuacalesDetalles.Add(detalle);
+        Entrada.EntradasHuacalesDetalles.Add(detalle);
 
-		DetalleSeleccionado = new EntradasHuacalesDetalle();
-		await Task.CompletedTask;
-	}
+        DetalleSeleccionado = new EntradasHuacalesDetalle();
+        await Task.CompletedTask;
+    }
 
-	public async Task GuardarEntrada ()
-	{
-		if (Entrada.NombreCliente == null)
-		{
-			errorMensaje = "El nombre no puede ser vacio";
-		}
+    public async Task GuardarEntrada ()
+    {
+        if (string.IsNullOrEmpty(Entrada.NombreCliente))
+        {
+            return;
+        }
 
 		if (await entradasService.Guardar(Entrada))
 		{
