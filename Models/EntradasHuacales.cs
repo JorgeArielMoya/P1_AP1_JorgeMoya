@@ -8,7 +8,7 @@ public class EntradasHuacales
     public int IdEntrada { get; set; }
 
     [Required(ErrorMessage = "Campo Requerido")]
-    public string NombreCliente { get; set; } = null!;
+    public string NombreCliente { get; set; } = string.Empty;
 
     [Range(1, int.MaxValue, ErrorMessage = "Cantidad no valida")]
     public int Cantidad {  get; set; }
