@@ -11,8 +11,8 @@ using P1_AP1_JorgeMoya.DAL;
 namespace P1_AP1_JorgeMoya.Migrations
 {
     [DbContext(typeof(Contexto))]
-    [Migration("20251011034938_v2")]
-    partial class v2
+    [Migration("20251011155420_Inicial")]
+    partial class Inicial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
