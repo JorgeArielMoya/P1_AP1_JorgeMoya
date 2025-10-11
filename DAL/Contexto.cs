@@ -19,19 +19,22 @@ public class Contexto : DbContext
                 new ()
                 {
                     TipoId = 1,
-                    Descripcion = "Rojo"
+                    Descripcion = "Rojo",
+                    Existencia = 0
                 },
 
                 new ()
                 {
                     TipoId = 2,
-                    Descripcion = "Verde"
+                    Descripcion = "Verde",
+                    Existencia = 0
                 },
 
                 new ()
                 {
                     TipoId = 3,
-                    Descripcion = "Negro"
+                    Descripcion = "Negro",
+                    Existencia = 0
                 }
             }
         );
