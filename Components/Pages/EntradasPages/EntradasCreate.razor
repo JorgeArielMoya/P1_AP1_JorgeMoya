@@ -86,7 +86,7 @@
                 }
 
                 <div class="card-footer d-flex justify-content-center gap-2 bg-white">
-                    <button type="submit" class="btn btn-primary bi bi-save"> Guardar </button>
+                    <button type="submit" class="btn btn-primary bi bi-save" @onclick = "GuardarEntrada"> Guardar </button>
                     <a href="/Entradas/Index" class="btn btn-secondary bi bi-arrow-left"> Regresar </a>
                 </div>
             </EditForm>
@@ -100,7 +100,7 @@
 	public List<TiposHuacales> ListaTiposHuacales { get; set; } = new();
 	public string errorMensaje { get; set; } = string.Empty;
 
-	public double Importe { get; set; }
+    public double ImporteTotal => Entrada?.EntradasHuacalesDetalles?.Sum(d => d.Cantidad * d.Precio) ?? 0;
 
 	protected override async Task OnInitializedAsync ()
 	{
@@ -124,6 +124,12 @@
 
 	public async Task GuardarEntrada ()
 	{
+        Console.WriteLine("=== INICIANDO GUARDAR ENTRADA ===");
+    Console.WriteLine($"NombreCliente: '{Entrada.NombreCliente}'");
+    Console.WriteLine($"Es null o vacío: {string.IsNullOrWhiteSpace(Entrada.NombreCliente)}");
+    Console.WriteLine($"Fecha: {Entrada.Fecha}");
+    Console.WriteLine($"Cantidad de detalles: {Entrada.EntradasHuacalesDetalles?.Count}");
+
 		if (Entrada.NombreCliente == null)
 		{
 			errorMensaje = "El nombre no puede ser vacio";
@@ -145,10 +151,5 @@
 	{
 		Entrada.EntradasHuacalesDetalles.Remove(detalle);
 		DetalleSeleccionado = detalle;
-	}
-
-	private void CalcularImporte()
-	{
-		Importe = Entrada.Cantidad * Entrada.Precio;
 	}
 }

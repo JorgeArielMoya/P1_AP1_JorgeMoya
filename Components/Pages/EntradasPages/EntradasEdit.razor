@@ -143,12 +143,7 @@ else
 
 	public bool mostrarModal { get; set; } = false;
 
-	public double Importe { get; set; }
-
-	private void CalcularImporte()
-	{
-		Importe = Entrada.Cantidad * Entrada.Precio;
-	}
+	public double ImporteTotal => Entrada?.EntradasHuacalesDetalles?.Sum(d => d.Cantidad * d.Precio) ?? 0;
 
 	protected override async Task OnInitializedAsync()
 	{
@@ -162,6 +157,7 @@ else
 		{
 			if (await entradasService.Guardar(Entrada))
 			{
+				toastService.ShowSuccess("Entrada modificada correctamente");
 				navigationManager.NavigateTo("/Entradas/Index");
 			}
 		}
@@ -173,6 +169,7 @@ else
 		{
 			if (await entradasService.Eliminar(IdEntrada))
 			{
+				toastService.ShowSuccess("Entrada eliminada correctamente");
 				navigationManager.NavigateTo("/Entradas/Index");
 			}
 		}
