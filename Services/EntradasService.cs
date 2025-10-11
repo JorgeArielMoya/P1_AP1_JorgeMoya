@@ -59,19 +59,24 @@ public class EntradasService(IDbContextFactory<Contexto>DbFactory)
     private async Task AfectarEntradas(EntradasHuacalesDetalle[] detalle, TipoOperacion tipoOperacion)
     {
         await using var contexto = await DbFactory.CreateDbContextAsync();
-        foreach (var item in detalle)
+        foreach (var entrada in detalle)
         {
             var tipoHuacal = await contexto.TiposHuacales
-                .SingleAsync(t => t.TipoId == item.TipoId);
+                .SingleAsync(t => t.TipoId == entrada.TipoId);
 
             if (tipoOperacion == TipoOperacion.Suma)
             {
-                tipoHuacal.Existencia += item.Cantidad;
+                tipoHuacal.Existencia += entrada.Cantidad;
             }
 
             else if (tipoOperacion == TipoOperacion.Resta)
             {
-                tipoHuacal.Existencia -= item.Cantidad;
+                tipoHuacal.Existencia -= entrada.Cantidad;
+
+                if (tipoHuacal.Existencia < 0)
+                {
+                    tipoHuacal.Existencia = 0;
+                }
             }
 
             await contexto.SaveChangesAsync();
