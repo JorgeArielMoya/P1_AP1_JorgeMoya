@@ -12,7 +12,6 @@ builder.Services.AddRazorComponents()
 
 //Inyectamos el contexto
 var ConStr = builder.Configuration.GetConnectionString("ConStr");
-
 builder.Services.AddDbContextFactory<Contexto>(o => o.UseSqlite(ConStr));
 
 //Inyeccion del service
