@@ -39,29 +39,6 @@
 						</div>
 					</div>
 
-					<div class="row">
-						<div class="col-12 col-md-3 mb-3">
-							<label class="col-form-label"> <strong> Cantidad: </strong></label>
-							<InputNumber class="form-control" @bind-Value="Entrada.Cantidad" @bind-Value:after="CalcularImporte"/>
-							<ValidationMessage For="() => Entrada.Cantidad"> </ValidationMessage>
-						</div>
-					</div>
-
-					<div class="row">
-						<div class="col-12 col-md-3 mb-3">
-							<label class="col-form-label"> <strong> Precio: </strong></label>
-							<InputNumber class="form-control" @bind-Value="Entrada.Precio" @bind-Value:after="CalcularImporte"/>
-							<ValidationMessage For="() => Entrada.Precio"> </ValidationMessage>
-						</div>
-					</div>
-
-					<div class="row">
-						<div class="col-12 col-md-3 mb-3">
-							<label class="col-form-label"> <strong> Importe: </strong> </label>
-							<InputNumber class="form-control" @bind-Value="Importe" readonly />
-						</div>
-					</div>
-
 					<div class="card-footer d-flex justify-content-center gap-2 bg-white">
 						<button type="submit" class="btn btn-primary bi bi-floppy"> Guardar </button>
 						<button type="button" class="btn btn-danger bi bi-trash" @onclick = "() => mostrarModal = true"> Eliminar </button>
