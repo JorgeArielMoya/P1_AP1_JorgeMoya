@@ -3,6 +3,7 @@
 @inject NavigationManager navigationManager
 @inject ToastService toastService
 @rendermode InteractiveServer
+
 <PageTitle>Create</PageTitle>
 
 <div class="container mt-3">
@@ -124,12 +125,6 @@
 
 	public async Task GuardarEntrada ()
 	{
-        Console.WriteLine("=== INICIANDO GUARDAR ENTRADA ===");
-    Console.WriteLine($"NombreCliente: '{Entrada.NombreCliente}'");
-    Console.WriteLine($"Es null o vacío: {string.IsNullOrWhiteSpace(Entrada.NombreCliente)}");
-    Console.WriteLine($"Fecha: {Entrada.Fecha}");
-    Console.WriteLine($"Cantidad de detalles: {Entrada.EntradasHuacalesDetalles?.Count}");
-
 		if (Entrada.NombreCliente == null)
 		{
 			errorMensaje = "El nombre no puede ser vacio";

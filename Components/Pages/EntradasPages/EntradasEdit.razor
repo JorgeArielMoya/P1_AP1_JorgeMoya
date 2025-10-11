@@ -48,8 +48,8 @@
 						Cantidad="DetalleSeleccionado.Cantidad"
 						Precio="DetalleSeleccionado.Precio"
 						OnTipoSeleccionado="HandleTipoSeleccionado" />
-						<hr />
 
+						<hr />
 						<table class="table table-light table-bordered table-hover">
 							<thead>
 								<tr class="text-center">
@@ -92,7 +92,7 @@
 						<button type="submit" class="btn btn-primary bi bi-floppy"> Guardar </button>
 						<button type="button" class="btn btn-danger bi bi-trash" @onclick="() => mostrarModal = true"> Eliminar </button>
 						<a href="/Entradas/Index" class="btn btn-secondary bi bi-arrow-left"> Regresar </a>
-					</div>
+					</div> 
 				</EditForm>
 			</div>
 		</div>
@@ -161,6 +161,11 @@ else
 				navigationManager.NavigateTo("/Entradas/Index");
 			}
 		}
+
+		else
+		{
+			errorMensaje = "Error al guardar";
+		}
 	}
 
 	public async Task EliminarEntrada()
@@ -171,6 +176,11 @@ else
 			{
 				toastService.ShowSuccess("Entrada eliminada correctamente");
 				navigationManager.NavigateTo("/Entradas/Index");
+			}
+
+			else 
+			{
+				toastService.ShowError("Error al eliminar");
 			}
 		}
 	}
