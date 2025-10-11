@@ -38,87 +38,50 @@ public class EntradasService(IDbContextFactory<Contexto>DbFactory)
     {
         await using var contexto = await DbFactory.CreateDbContextAsync();
 
-        var entradaExistente = await contexto.EntradasHuacales
-        .Include(e => e.EntradasHuacalesDetalles)
-        .FirstOrDefaultAsync(e => e.IdEntrada == entrada.IdEntrada);
+        var entradaAnterior = await contexto.EntradasHuacales
+            .Include(e => e.EntradasHuacalesDetalles)
+            .AsNoTracking()
+            .FirstOrDefaultAsync(e => e.IdEntrada == entrada.IdEntrada);
 
-        if (entradaExistente == null)
+        if (entradaAnterior == null)
         {
             return false;
         }
 
-        // 2. Afectar existencias (restar los detalles anteriores)
-        await AfectarEntradas(entradaExistente.EntradasHuacalesDetalles.ToArray(), TipoOperacion.Resta);
+        // Restar cantidad original
+        await AfectarEntradas(entradaAnterior.EntradasHuacalesDetalles.ToArray(), TipoOperacion.Resta);
 
-        // 3. Actualizar la entrada principal
-        contexto.Entry(entradaExistente).CurrentValues.SetValues(entrada);
-
-        // 4. Actualizar los detalles
-        // Eliminar detalles que ya no existen
-        foreach (var detalleExistente in entradaExistente.EntradasHuacalesDetalles.ToList())
-        {
-            if (!entrada.EntradasHuacalesDetalles.Any(d => d.DetalleId == detalleExistente.DetalleId))
-            {
-                contexto.Remove(detalleExistente);
-            }
-        }
-
-        // Actualizar/agregar detalles
-        foreach (var detalle in entrada.EntradasHuacalesDetalles)
-        {
-            var detalleExistente = entradaExistente.EntradasHuacalesDetalles
-                .FirstOrDefault(d => d.DetalleId == detalle.DetalleId);
-
-            if (detalleExistente != null)
-            {
-                // Actualizar detalle existente
-                contexto.Entry(detalleExistente).CurrentValues.SetValues(detalle);
-            }
-            else
-            {
-                // Agregar nuevo detalle
-                detalle.DetalleId = 0; // Para que sea auto-generado
-                entradaExistente.EntradasHuacalesDetalles.Add(detalle);
-            }
-        }
-
-        // 5. Afectar existencias (sumar los nuevos detalles)
+        // Sumar nueva cantidad
         await AfectarEntradas(entrada.EntradasHuacalesDetalles.ToArray(), TipoOperacion.Suma);
 
-        // 6. Guardar TODOS los cambios de una vez
+        contexto.EntradasHuacales.Update(entrada);
         return await contexto.SaveChangesAsync() > 0;
     }
 
     private async Task AfectarEntradas(EntradasHuacalesDetalle[] detalles, TipoOperacion tipoOperacion)
     {
         await using var contexto = await DbFactory.CreateDbContextAsync();
-
-        var tipoIds = detalles.Select(d => d.TipoId).Distinct();
-        var tiposHuacal = await contexto.TiposHuacales
-            .Where(t => tipoIds.Contains(t.TipoId))
-            .ToListAsync();
-
-        foreach (var detalle in detalles)
+        foreach (var entrada in detalles)
         {
-            var tipoHuacal = tiposHuacal.FirstOrDefault(t => t.TipoId == detalle.TipoId);
-            if (tipoHuacal != null)
+            var tipoHuacal = await contexto.TiposHuacales
+                .SingleAsync(t => t.TipoId == entrada.TipoId);
+
+            if (tipoOperacion == TipoOperacion.Suma)
             {
-                if (tipoOperacion == TipoOperacion.Suma)
+                tipoHuacal.Existencia += entrada.Cantidad;
+            }
+            else if (tipoOperacion == TipoOperacion.Resta)
+            {
+                tipoHuacal.Existencia -= entrada.Cantidad;
+
+                if (tipoHuacal.Existencia < 0 )
                 {
-                    tipoHuacal.Existencia += detalle.Cantidad;
-                }
-                else if (tipoOperacion == TipoOperacion.Resta)
-                {
-                    tipoHuacal.Existencia -= detalle.Cantidad;
-                    if (tipoHuacal.Existencia < 0)
-                    {
-                        tipoHuacal.Existencia = 0;
-                    }
+                    tipoHuacal.Existencia = 0;
                 }
             }
-        }
 
-        await contexto.SaveChangesAsync();
+            await contexto.SaveChangesAsync();
+        }
     }
 
     public async Task<EntradasHuacales?> Buscar (int entradaId)
