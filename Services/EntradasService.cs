@@ -87,6 +87,11 @@ public class EntradasService(IDbContextFactory<Contexto>DbFactory)
             else
             {
                 tipoHuacal.Existencia -= cantidadEntrada;
+
+                if (tipoHuacal.Existencia < 0)
+                {
+                    tipoHuacal.Existencia = 0;
+                }
             }
 
             await contexto.SaveChangesAsync();
