@@ -60,6 +60,12 @@
 			return;
 		}
 
+		if (Precio < 0.01)
+		{
+			ErrorMensaje = "Precio no valido";
+			return;
+		}
+
 		var tipoSeleccionado = TiposHuacales.Single(t => t.TipoId == TipoId);
 
 		await OnTipoSeleccionado.InvokeAsync((tipoSeleccionado, Cantidad, Precio));
