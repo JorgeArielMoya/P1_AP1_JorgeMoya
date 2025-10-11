@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using P1_AP1_JorgeMoya.DAL;
 
@@ -10,9 +11,11 @@ using P1_AP1_JorgeMoya.DAL;
 namespace P1_AP1_JorgeMoya.Migrations
 {
     [DbContext(typeof(Contexto))]
-    partial class ContextoModelSnapshot : ModelSnapshot
+    [Migration("20251011155420_Inicial")]
+    partial class Inicial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.9");
@@ -102,24 +105,6 @@ namespace P1_AP1_JorgeMoya.Migrations
                         {
                             TipoId = 3,
                             Descripcion = "Negro",
-                            Existencia = 0
-                        },
-                        new
-                        {
-                            TipoId = 4,
-                            Descripcion = "Azul",
-                            Existencia = 0
-                        },
-                        new
-                        {
-                            TipoId = 5,
-                            Descripcion = "Amarillo",
-                            Existencia = 0
-                        },
-                        new
-                        {
-                            TipoId = 6,
-                            Descripcion = "Naranja",
                             Existencia = 0
                         });
                 });

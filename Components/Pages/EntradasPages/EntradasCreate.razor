@@ -1,88 +1,150 @@
 ﻿@page "/Entradas/Create"
 @inject EntradasService entradasService
 @inject NavigationManager navigationManager
+@inject ToastService toastService
 @rendermode InteractiveServer
 
-<PageTitle> Create </PageTitle>
+<PageTitle>Create</PageTitle>
 
 <div class="container mt-3">
-	<div class="card shadow-lg">
-		<div class="card-header">
-			<h5 class="card-title text-center"> <strong> Crear Entrada </strong> </h5>
-		</div>
+    <div class="card shadow-lg">
+        <div class="card-header">
+            <h5 class="card-title text-center"><strong>Crear Entrada</strong></h5>
+        </div>
 
-		<div class="card-body">
-			<EditForm Model="Entrada" OnValidSubmit="GuardarEntrada"> 
-				<DataAnnotationsValidator/>
-				<div class="row">
-					<div class="col-12 col-md-3 mb-3">
-						<label class="col-form-label"> <strong> Fecha: </strong></label>
-						<InputDate class="form-control" @bind-Value="Entrada.Fecha" />
-					</div>
-				</div>
+        <div class="card-body">
+            <EditForm Model="Entrada" OnValidSubmit="GuardarEntrada">
+                <DataAnnotationsValidator />
+                <div class="row">
+                    <div class="col-12 col-md-6 mb-3">
+                        <label class="col-form-label"><strong>Entrada Id:</strong></label>
+                        <InputNumber class="form-control" @bind-Value="Entrada.IdEntrada" disabled />
+                    </div>
+                </div>
 
-				<div class="row">
-					<div class="col-12 col-md-3 mb-3">
-						<label class="col-form-label"> <strong> Entrada Id: </strong></label>
-						<InputNumber class="form-control" @bind-Value = "Entrada.IdEntrada" disabled />
-					</div>
-				</div>
+                <div class="row">
+                    <div class="col-12 col-md-6 mb-3">
+                        <label class="col-form-label"><strong>Fecha:</strong></label>
+                        <InputDate class="form-control" @bind-Value="Entrada.Fecha" />
+                    </div>
+                </div>
 
-				<div class="row">
-					<div class="col-12 col-md-3 mb-3">
-						<label class="col-form-label"> <strong> Nombre cliente: </strong></label>
-						<InputText class="form-control" @bind-Value="Entrada.NombreCliente" />
-						<ValidationMessage For="() => Entrada.NombreCliente"> </ValidationMessage>
-					</div>
-				</div>
+                <div class="row">
+                    <div class="col-12 col-md-6 mb-3">
+                        <label class="col-form-label"><strong>Nombre cliente:</strong></label>
+                        <InputText class="form-control" @bind-Value="Entrada.NombreCliente" />
+                        <ValidationMessage For="() => Entrada.NombreCliente"></ValidationMessage>
+                    </div>
+                </div>
 
-				<div class="row">
-					<div class="col-12 col-md-3 mb-3">
-						<label class="col-form-label"> <strong> Cantidad: </strong></label>
-						<InputNumber class="form-control" @bind-Value="Entrada.Cantidad" @bind-Value:after = "CalcularImporte"/>
-						<ValidationMessage For="() => Entrada.Cantidad"> </ValidationMessage>
-					</div>
-				</div>
+                @* Detalle Tipo *@
+                <div class="border border-success p-3 mt-3">
+                    <h5>Detalles de Huacales</h5>
 
-				<div class="row">
-					<div class="col-12 col-md-3 mb-3">
-						<label class="col-form-label"> <strong> Precio: </strong></label>
-						<InputNumber class="form-control" @bind-Value="Entrada.Precio" @bind-Value:after="CalcularImporte"/>
-						<ValidationMessage For="() => Entrada.Precio"> </ValidationMessage>
-					</div>
-				</div>
+                    <TipoPicker TiposHuacales="ListaTiposHuacales"
+                    TipoId="DetalleSeleccionado.TipoId"
+                    Cantidad="DetalleSeleccionado.Cantidad"
+                    Precio="DetalleSeleccionado.Precio"
+                    OnTipoSeleccionado="HandleTipoSeleccionado" />
+                    <hr />
 
-				<div class="row">
-					<div class="col-12 col-md-3 mb-3">
-						<label class="col-form-label"> <strong> Importe: </strong> </label>
-						<InputNumber class="form-control" @bind-Value = "Importe" readonly/>
-					</div>
-				</div> 
+                    <table class="table table-light table-bordered table-hover">
+                        <thead>
+                            <tr class="text-center">
+                                <th>Tipo Huacal</th>
+                                <th>Cantidad</th>
+                                <th>Precio</th>
+                                <th>Importe</th>
+                                <th>Remover</th>
+                            </tr>
+                        </thead>
 
-				<div class="card-footer d-flex justify-content-center gap-2 bg-white">
-					<button type="submit" class="btn btn-primary bi bi-floppy"> Guardar </button>
-					<a href="/Entradas/Index" class="btn btn-secondary bi bi-arrow-left"> Regresar </a>
-				</div>
-			</EditForm>
-		</div>
-	</div>
+                        <tbody class="text-center">
+                            @foreach (var detalle in Entrada.EntradasHuacalesDetalles)
+                            {
+                                <tr>
+                                    <td>@ListaTiposHuacales.FirstOrDefault(t => t.TipoId == detalle.TipoId)?.Descripcion</td>
+                                    <td>@detalle.Cantidad</td>
+                                    <td>@detalle.Precio</td>
+                                    <td>@(detalle.Cantidad * detalle.Precio)</td>
+                                    <td>
+                                        <button type="button" class="btn btn-outline-dark bi bi-trash" @onclick="() => RemoverDetalle(detalle)">Remover</button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                    <div class="mb-3">
+                        <label class="form-label"><strong>Importe Total:</strong></label>
+                        <input class="form-control bg-light text-secondary" value="@Entrada.EntradasHuacalesDetalles.Sum(d => d.Cantidad * d.Precio)" readonly />
+                    </div>
+                </div>
+
+                @if (!string.IsNullOrWhiteSpace(errorMensaje))
+                {
+                    <div class="alert alert-danger">@errorMensaje</div>
+                }
+
+                <div class="card-footer d-flex justify-content-center gap-2 bg-white">
+                    <button type="submit" class="btn btn-primary bi bi-save" @onclick = "GuardarEntrada"> Guardar </button>
+                    <a href="/Entradas/Index" class="btn btn-secondary bi bi-arrow-left"> Regresar </a>
+                </div>
+            </EditForm>
+        </div>
+    </div>
 </div>
 
 @code {
-	public EntradasHuacales Entrada = new EntradasHuacales();
+    public EntradasHuacales Entrada = new EntradasHuacales();
+    public EntradasHuacalesDetalle DetalleSeleccionado { get; set; } = new();
+    public List<TiposHuacales> ListaTiposHuacales { get; set; } = new();
+    public string errorMensaje { get; set; } = string.Empty;
 
-	public double Importe { get; set; }
+    public double ImporteTotal => Entrada?.EntradasHuacalesDetalles?.Sum(d => d.Cantidad * d.Precio) ?? 0;
 
-	private void CalcularImporte ()
-	{
-		Importe = Entrada.Cantidad * Entrada.Precio;
-	}
+    protected override async Task OnInitializedAsync ()
+    {
+        ListaTiposHuacales = await entradasService.ListarTiposHuacales();
+    }
 
-	public async Task GuardarEntrada ()
-	{
+    private async Task HandleTipoSeleccionado((TiposHuacales tipo, int cantidad, double precio) selection)
+    {
+        var detalle = new EntradasHuacalesDetalle
+		{
+			TipoId = selection.tipo.TipoId,
+			Cantidad = selection.cantidad,
+			Precio = selection.precio,
+		};
+
+        Entrada.EntradasHuacalesDetalles.Add(detalle);
+
+        DetalleSeleccionado = new EntradasHuacalesDetalle();
+        await Task.CompletedTask;
+    }
+
+    public async Task GuardarEntrada ()
+    {
+        if (string.IsNullOrEmpty(Entrada.NombreCliente))
+        {
+            return;
+        }
+
 		if (await entradasService.Guardar(Entrada))
 		{
+			toastService.ShowSuccess("Entrada guardada correctamente");
 			navigationManager.NavigateTo("/Entradas/Index");
 		}
+
+		else 
+		{
+			errorMensaje = "Error al guardar";
+		}
+	}
+
+	private void RemoverDetalle(EntradasHuacalesDetalle detalle)
+	{
+		Entrada.EntradasHuacalesDetalles.Remove(detalle);
+		DetalleSeleccionado = detalle;
 	}
 }

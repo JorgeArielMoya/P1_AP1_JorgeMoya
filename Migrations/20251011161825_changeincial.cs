@@ -5,7 +5,7 @@
 namespace P1_AP1_JorgeMoya.Migrations
 {
     /// <inheritdoc />
-    public partial class valiCant : Migration
+    public partial class changeincial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

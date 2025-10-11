@@ -1,3 +1,4 @@
+using BlazorBootstrap;
 using Microsoft.EntityFrameworkCore;
 using P1_AP1_JorgeMoya.Components;
 using P1_AP1_JorgeMoya.DAL;
@@ -11,11 +12,13 @@ builder.Services.AddRazorComponents()
 
 //Inyectamos el contexto
 var ConStr = builder.Configuration.GetConnectionString("ConStr");
-
 builder.Services.AddDbContextFactory<Contexto>(o => o.UseSqlite(ConStr));
 
 //Inyeccion del service
 builder.Services.AddScoped<EntradasService>();
+
+// Inyeccion del servicio de Bootstrap
+builder.Services.AddBlazorBootstrap();
 
 var app = builder.Build();
 

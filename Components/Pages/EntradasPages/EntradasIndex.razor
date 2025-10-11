@@ -17,19 +17,19 @@
 
 		<div class="card-body">
 			<div class="row align-items-center">
-				<div class="col-12 col-md-3 mb-3">
+				<div class="col-12 col-md-4 mb-3">
 					<label class="col-form-label"> <strong> Desde: </strong></label>
 					<InputDate class="form-control" @bind-Value = "desde" />
 				</div>
 
-				<div class="col-12 col-md-3 mb-3">
+				<div class="col-12 col-md-4 mb-3">
 					<label class="col-form-label"> <strong> Hasta: </strong></label>
 					<InputDate class="form-control" @bind-Value="hasta" />
 				</div>
 			</div>
 
 			<div class="row align-items-center">
-				<div class="col-12 col-md-3 mb-3">
+				<div class="col-12 col-md-4 mb-3">
 					<label class="col-form-label"> <strong> Filtrar por: </strong></label>
 					<InputSelect class="form-select" @bind-Value="filtro"> 
 						<option value="" selected disabled> Elija una opcion </option>
@@ -40,7 +40,7 @@
 					</InputSelect>
 				</div>
 
-				<div class="col-12 col-md-3 mb-3">
+				<div class="col-12 col-md-4 mb-3">
 					<label class="col-form-label"> <strong> Busqueda: </strong></label>
 					<div class="input-group">
 						<input class="form-control" @bind = "valorFiltro" placeholder="Buscar" />
@@ -55,9 +55,9 @@
 						<tr> 
 							<th> Entrada Id </th>
 							<th> Nombre Cliente </th>
-							<th> Cantidad </th>
-							<th> Precio </th>
-							<th> Importe </th>
+							<th> Total Cantidad </th>
+							<th> Total Precio </th>
+							<th> Total Importe </th>
 							<th> Fecha </th>
 							<th> Opciones </th>
 						</tr>
@@ -75,9 +75,9 @@
 						<tr>
 							<td> @entrada.IdEntrada</td>
 							<td> @entrada.NombreCliente </td>
-							<td> @entrada.Cantidad </td>
-							<td> @entrada.Precio.ToString("F2") </td>
-							<td> @((entrada.Precio * entrada.Cantidad).ToString("F2")) </td>
+							<td> @entrada.EntradasHuacalesDetalles.Sum(d => d.Cantidad) </td>
+							<td> @entrada.EntradasHuacalesDetalles.Sum(d => d.Precio).ToString("F2") </td>
+							<td> @entrada.EntradasHuacalesDetalles.Sum(d => d.Precio * d.Cantidad) </td>
 							<td> @entrada.Fecha.ToShortDateString()</td>
 							<td> <a href="/Entradas/Edit/@entrada.IdEntrada" class="btn btn-outline-info bi bi-pencil-square"> </a></td>
 						</tr>
@@ -86,11 +86,12 @@
 			</div>
 		</div>
 		<div class="card-footer space-between bg-white">
-			<label> <strong> Total cantidad: </strong> @ListaEntradas.Sum(a => a.Cantidad) </label>
-			<label> <strong> Total importe: </strong> @ListaEntradas.Sum(a=> a.Cantidad * a.Precio).ToString("F2") </label>
+			<label> <strong> Total cantidad: </strong> @ListaEntradas.Sum(a => a.EntradasHuacalesDetalles.Sum(d => d.Cantidad)) </label>
+			<label> <strong> Total importe: </strong>  @ListaEntradas.Sum(a => a.EntradasHuacalesDetalles.Sum(d => d.Precio * d.Cantidad)).ToString("F2") </label>
 		</div>
 	</div>
 </div>
+
 @code {
 	public DateTime? desde { get; set; }
 
