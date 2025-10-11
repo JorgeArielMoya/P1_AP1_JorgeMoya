@@ -1,5 +1,5 @@
 ﻿﻿<div class="col-auto input-group align-items-center">
-	<label class="col-form-label"> <strong> Seleccionar tipo: </strong> </label>
+	<label class="col-form-label input-group-text"> <strong> Seleccionar tipo: </strong> </label>
 
 	<InputSelect class="form-select" @bind-Value="TipoId">
 		<option value="" selected disabled> Elija una opcion </option>
@@ -10,11 +10,11 @@
 		}
 	</InputSelect>
 
-	<label class="col-form-label"> <strong> Cantidad: </strong> </label>
-	<InputNumber class="form-control" @bind-Value="Cantidad"/>
+	<label class="col-form-label input-group-text"> <strong> Cantidad: </strong> </label>
+	<InputNumber class="form-control" id="quantity-input" @bind-Value="Cantidad" min="0"/>
 
-	<label class="col-form-label"> <strong> Precio: </strong> </label>
-	<InputNumber class="form-control" @bind-Value="Precio"/>
+	<label class="col-form-label input-group-text"> <strong> Precio: </strong> </label>
+	<InputNumber class="form-control" id="price-input" @bind-Value="Precio" min="0"/>
 
 	<button type="button" class="btn btn-outline-success bi bi-plus" @onclick="TriggerSelection"> Agregar </button>
 </div>
