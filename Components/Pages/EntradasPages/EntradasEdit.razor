@@ -18,21 +18,21 @@
 				<EditForm Model="Entrada" OnValidSubmit="GuardarEntrada">
 					<DataAnnotationsValidator />
 					<div class="row">
-						<div class="col-12 col-md-3 mb-3">
-							<label class="col-form-label"> <strong> Fecha: </strong></label>
-							<InputDate class="form-control" @bind-Value="Entrada.Fecha" />
-						</div>
-					</div>
-
-					<div class="row">
-						<div class="col-12 col-md-3 mb-3">
+						<div class="col-12 col-md-6 mb-3">
 							<label class="col-form-label"> <strong> Entrada Id: </strong></label>
 							<InputNumber class="form-control" @bind-Value="Entrada.IdEntrada" disabled />
 						</div>
 					</div>
 
 					<div class="row">
-						<div class="col-12 col-md-3 mb-3">
+						<div class="col-12 col-md-6 mb-3">
+							<label class="col-form-label"> <strong> Fecha: </strong></label>
+							<InputDate class="form-control" @bind-Value="Entrada.Fecha" />
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-12 col-md-6 mb-3">
 							<label class="col-form-label"> <strong> Nombre cliente: </strong></label>
 							<InputText class="form-control" @bind-Value="Entrada.NombreCliente" />
 							<ValidationMessage For="() => Entrada.NombreCliente"> </ValidationMessage>
