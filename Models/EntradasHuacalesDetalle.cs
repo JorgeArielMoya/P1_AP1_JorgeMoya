@@ -9,7 +9,9 @@ public class EntradasHuacalesDetalle
     public int DetalleId { get; set; }
     public int IdEntrada { get; set; }
     public int TipoId { get; set; }
+    [Range(1, int.MaxValue, ErrorMessage = "Cantidad no valida")]
     public int Cantidad { get; set; }
+    [Range(0.01, double.MaxValue, ErrorMessage = "Precio no valida")]
     public double Precio { get; set; }
 
     [ForeignKey("IdEntrada")]
