@@ -86,8 +86,8 @@
 			</div>
 		</div>
 		<div class="card-footer space-between bg-white">
-			<label> <strong> Total cantidad: </strong> @ListaEntradas.Sum(a => a.Cantidad) </label>
-			<label> <strong> Total importe: </strong> @ListaEntradas.Sum(a=> a.Cantidad * a.Precio).ToString("F2") </label>
+			<label> <strong> Total cantidad: </strong> @ListaEntradas.Sum(a => a.EntradasHuacalesDetalles.Sum(d => d.Cantidad)) </label>
+			<label> <strong> Total importe: </strong>  @ListaEntradas.Sum(a => a.EntradasHuacalesDetalles.Sum(d => d.Precio * d.Cantidad)).ToString("F2") </label>
 		</div>
 	</div>
 </div>
