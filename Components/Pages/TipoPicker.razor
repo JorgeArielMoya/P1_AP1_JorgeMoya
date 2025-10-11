@@ -6,14 +6,14 @@
 
 		@foreach (var tipo in TiposHuacales)
 		{
-			<option value="@tipo.TipoId">@tipo.TipoId - @tipo.Descripcion (Existencia: @tipo.Existencia)</option>
+			<option value="@tipo.TipoId">@tipo.TipoId - @tipo.Descripcion (Existencia: @tipo.Existencia) </option>
 		}
 	</InputSelect>
 
-	<label class="col-form-label"> <strong> Cantidad </strong> </label>
+	<label class="col-form-label"> <strong> Cantidad: </strong> </label>
 	<InputNumber class="form-control" @bind-Value="Cantidad"/>
 
-	<label class="col-form-label"> <strong> Precio </strong> </label>
+	<label class="col-form-label"> <strong> Precio: </strong> </label>
 	<InputNumber class="form-control" @bind-Value="Precio"/>
 
 	<button type="button" class="btn btn-outline-success bi bi-plus" @onclick="TriggerSelection"> Agregar </button>
