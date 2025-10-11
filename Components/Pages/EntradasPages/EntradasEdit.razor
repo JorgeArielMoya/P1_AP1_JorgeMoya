@@ -44,10 +44,10 @@
 						<h5>Detalles de Huacales</h5>
 
 						<TipoPicker TiposHuacales="ListaTiposHuacales"
-									TipoId="DetalleSeleccionado.TipoId"
-									Cantidad="DetalleSeleccionado.Cantidad"
-									Precio="DetalleSeleccionado.Precio"
-									OnTipoSeleccionado="HandleTipoSeleccionado" />
+						TipoId="DetalleSeleccionado.TipoId"
+						Cantidad="DetalleSeleccionado.Cantidad"
+						Precio="DetalleSeleccionado.Precio"
+						OnTipoSeleccionado="HandleTipoSeleccionado" />
 						<hr />
 
 						<table class="table table-light table-bordered table-hover">
@@ -153,6 +153,7 @@ else
 	protected override async Task OnInitializedAsync()
 	{
 		Entrada = await entradasService.Buscar(IdEntrada);
+		ListaTiposHuacales = await entradasService.ListarTiposHuacales();
 	}
 
 	public async Task GuardarEntrada()
