@@ -37,10 +37,10 @@
 	public int Cantidad { get; set; }
 
 	[Parameter]
-	public decimal Precio { get; set; }
+	public double Precio { get; set; }
 
 	[Parameter]
-	public EventCallback<(TiposHuacales Tipo, int Cantidad, decimal Precio)> OnTipoSeleccionado { get; set; }
+	public EventCallback<(TiposHuacales Tipo, int Cantidad, double Precio)> OnTipoSeleccionado { get; set; }
 
 	private string? ErrorMensaje { get; set; } = null;
 
